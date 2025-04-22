@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "2025년 4월 22일 오후 02_14_22 1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "2025년 4월 22일 오후 02_14_22 1 (1).png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "2025년 4월 22일 오후 02_14_22 1 (2).png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
