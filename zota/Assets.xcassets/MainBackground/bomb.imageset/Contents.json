@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "2025년 4월 22일 오후 02_14_22 1.png",
+      "filename" : "bomb-1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "2025년 4월 22일 오후 02_14_22 1 (1).png",
+      "filename" : "bomb-2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "2025년 4월 22일 오후 02_14_22 1 (2).png",
+      "filename" : "bomb-3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
