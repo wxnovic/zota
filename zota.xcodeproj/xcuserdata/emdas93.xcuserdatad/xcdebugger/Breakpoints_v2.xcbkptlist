@@ -34,6 +34,36 @@
             endingLineNumber = "8"
             landmarkName = "Task"
             landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "D319EDE7-872B-45E2-9C82-42D4F459CFF3 - 566a6df7458510fa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "zota.Task.deinit"
+                  moduleName = "zota.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emdas93/workspace/zota/zota/Protocols/Task.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "D319EDE7-872B-45E2-9C82-42D4F459CFF3 - c33cef742e59668d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "zota.Task.__deallocating_deinit"
+                  moduleName = "zota.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emdas93/workspace/zota/zota/Protocols/Task.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

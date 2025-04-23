@@ -1,58 +1,70 @@
-//
-//  IntroView.swift
-//  zota
-//
-//  Created by Chu on 4/22/25.
-//
-
 import SwiftUI
 
 struct MainView: View {
+    
+    @State private var sunOffset: CGFloat = 0
+    @State private var cloudOffset1: CGFloat = 0
+    @State private var cloudOffset2: CGFloat = 0
+    @State private var cloudOffset3: CGFloat = 0
+    @State private var cloudOffset4: CGFloat = 0
+    @State private var bombVerticalOffset: CGFloat = 0  // bomb ZStack의 수직 오프셋
 
     var body: some View {
-        GeometryReader{ geometry in
-        let width:CGFloat = CGFloat(geometry.size.width)
-        let height:CGFloat = CGFloat(geometry.size.height)
-            
-        
-            ZStack(){
+        GeometryReader { geometry in
+            let width: CGFloat = geometry.size.width
+            let height: CGFloat = geometry.size.height
+
+            ZStack {
                 Image("background")
                     .resizable()
                     .ignoresSafeArea()
                     .zIndex(-1)
-                
+
                 Image("sun")
+                    .offset(x: sunOffset)
                     .position(x: width * 0.3, y: height * 0.1)
                     .zIndex(1)
+
                 Image("cloud")
+                    .offset(x: cloudOffset1)
                     .position(x: width * 0.15, y: height * 0.09)
                     .opacity(0.9)
                     .zIndex(2)
+
                 Image("cloud")
+                    .offset(x: cloudOffset2)
                     .position(x: width * 0.8, y: height * 0.38)
                     .zIndex(0)
+
                 Image("cloud")
+                    .offset(x: cloudOffset3)
                     .position(x: width * 0.15, y: height * 0.65)
                     .zIndex(0)
+
                 Image("cloud")
+                    .offset(x: cloudOffset4)
                     .position(x: width * 0.9, y: height * 0.95)
                     .zIndex(0)
-                
-                VStack(){
-                    ZStack(){
+
+                VStack {
+                    ZStack {
                         Image("bomb")
                             .resizable()
                             .frame(width: 300, height: 300)
+
                         Text("04 : 04")
-                            .foregroundColor(.red).zIndex(1).font(.title)
+                            .foregroundColor(.red)
+                            .zIndex(1)
+                            .font(.title)
                             .offset(x: 2, y: 16)
                     }
                     .padding()
                     .shadow(radius: 10)
                     .frame(width: 300, height: 250)
-                
-                    VStack(){
-                        HStack(){
+                    .offset(y: bombVerticalOffset)  // 수직 애니메이션 적용
+
+                    VStack {
+                        HStack {
                             Text("04/22")
                                 .font(.title)
                                 .bold()
@@ -62,77 +74,45 @@ struct MainView: View {
                                 .bold()
                         }
                     }
-                    
-                    VStack(){
-                        HStack(){
-                            // 컴포넌트 작성 필요
-                            ZStack(){
-                                Rectangle()
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(Color.init(hex: "DDDDDD"))
-                                    .background(Color.gray)
-                                Text("레이아웃")
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(.black)
-                                    .font(.title3)
-                            }
-                            // 컴포넌트 작성 필요
-                            ZStack(){
-                                Rectangle()
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(Color.init(hex: "DDDDDD"))
-                                    .background(Color.gray)
-                                Text("레이아웃")
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(.black)
-                                    .font(.title3)
-                            }
-              
-                            
-                        }
-                        HStack(){
-                            // 컴포넌트 작성 필요
-                            ZStack(){
-                                Rectangle()
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(Color.init(hex: "DDDDDD"))
-                                    .background(Color.gray)
-                                Text("레이아웃")
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(.black)
-                                    .font(.title3)
-                            }
-                            // 컴포넌트 작성 필요
-                            ZStack(){
-                                Rectangle()
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(Color.init(hex: "DDDDDD"))
-                                    .background(Color.gray)
-                                Text("레이아웃")
-                                    .frame(width: 100, height: 120)
-                                    .foregroundColor(.black)
-                                    .font(.title3)
+
+                    VStack {
+                        HStack {
+                            ZStack {
+                                VStack {
+                                    HStack {
+                                        TaskPaper(text: "오늘 할 일")
+                                        TaskPaper(text: "오늘 할 일")
+                                    }
+                                    HStack {
+                                        TaskPaper(text: "오늘 할 일")
+                                        TaskPaper(text: "오늘 할 일")
+                                    }
+                                }
                             }
                         }
                     }
-                    .frame(width: 300, height: 300)
-                    .background(Color.gray.opacity(0.8), in : RoundedRectangle(cornerRadius: 25))
-
+                    .frame(width: 300, height: 400)
+                    .background(Color.gray.opacity(0.8), in: RoundedRectangle(cornerRadius: 25))
                 }
                 .position(x: width / 2, y: height / 2)
-
-                
-                
-            }.onTapGesture {
-                print(width)
-                print(height)
             }
-            
+            .onAppear {
+                animateElements()
+            }
+        }
+    }
+
+    func animateElements() {
+        withAnimation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+            sunOffset = 10
+            cloudOffset1 = -10
+            cloudOffset2 = 8
+            cloudOffset3 = -6
+            cloudOffset4 = 5
+            bombVerticalOffset = -20  // 위로 살짝 이동 (반복적으로)
         }
     }
 }
-
-
 
 #Preview {
     MainView()

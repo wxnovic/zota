@@ -17,11 +17,6 @@ struct ContentView: View {
                     Image(systemName: "house")
                     Text("Home")
                 }
-            Rectangle()
-                .tabItem{
-                    Image(systemName: "plus")
-                    Text("Add")
-                }
         }
     }
    
