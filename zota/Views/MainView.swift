@@ -80,12 +80,12 @@ struct MainView: View {
                             ZStack {
                                 VStack {
                                     HStack {
-                                        TaskPaper(text: "오늘 할 일")
-                                        TaskPaper(text: "오늘 할 일")
+                                        TaskPaper(text: "밥 먹기")
+                                        TaskPaper(text: "발표준비")
                                     }
                                     HStack {
-                                        TaskPaper(text: "오늘 할 일")
-                                        TaskPaper(text: "오늘 할 일")
+                                        TaskPaper(text: "뭐라고?")
+                                        TaskPaper(text: "폭탄 터뜨리기")
                                     }
                                 }
                             }
@@ -108,7 +108,7 @@ struct MainView: View {
             cloudOffset1 = -10
             cloudOffset2 = 8
             cloudOffset3 = -6
-            cloudOffset4 = 5
+            cloudOffset4 = 10
             bombVerticalOffset = -20  // 위로 살짝 이동 (반복적으로)
         }
     }

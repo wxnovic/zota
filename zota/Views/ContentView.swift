@@ -9,20 +9,27 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-
     var body: some View {
-        TabView{
+        TabView {
             MainView()
-                .tabItem{
-                    Image(systemName: "house")
-                    Text("Home")
+                .tabItem {
+                    VStack {
+                        Image(systemName: "flame.fill")
+                        Text("HOME")
+                    }
+                }
+            
+            TaskPaper(text: "HELLO")
+                .tabItem {
+                    VStack {
+                        Image(systemName: "gear")
+                        Text("설정")
+                    }
                 }
         }
+        .accentColor(.orange) // 선택된 탭 색상
     }
-   
 }
-
-
 
 #Preview {
     ContentView()
