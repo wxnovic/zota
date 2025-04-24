@@ -19,7 +19,14 @@ struct ContentView: View {
                     }
                 }
             
-            Rectangle()
+            DataEntryView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "flame.fill")
+                        Text("HOME")
+                    }
+                }
+            MasterListView()
                 .tabItem {
                     VStack {
                         Image(systemName: "flame.fill")

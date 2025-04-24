@@ -1,6 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
+    
+    @Query var tasks: [TaskModel]
+    @Query var categories: [CategoryModel]
+    
+    
     @State private var showCloud1 = false
     @State private var showCloud2 = false
     @State private var showCloud3 = false
@@ -92,17 +98,20 @@ struct MainView: View {
                                             .font(.title)
                                             .shadow(radius: 2)
                                             .bold()
+                                            .onTapGesture {
+                                                print()
+                                            }
                                     }
                                 }
                                 HStack {
-                                    VStack {
-                                        HStack {
-                                            TaskPaper(text: "밥 먹기")
-                                            TaskPaper(text: "발표준비")
-                                        }
-                                        HStack {
-                                            TaskPaper(text: "뭐라고?")
-                                            TaskPaper(text: "폭탄 터뜨리기")
+                                    ScrollView {
+                                        VStack {
+                                            ForEach(categories) { category in
+                                                HStack {
+                                                    
+                                                    TaskPaper(id: 1, text: "TET")
+                                                }
+                                            }
                                         }
                                     }
                                 }

@@ -2,6 +2,7 @@ import SwiftUI
 import UIKit
 
 struct TaskPaper: View {
+    var id: Int
     var text: String
 
 
@@ -144,11 +145,4 @@ struct TaskPaper: View {
         }
         .frame(width: 120, height: 140)
     }
-}
-
-
-
-// 미리보기
-#Preview {
-    TaskPaper(text: "TEST")
 }
