@@ -19,11 +19,11 @@ struct ContentView: View {
                     }
                 }
             
-            TaskPaper(text: "HELLO")
+            Rectangle()
                 .tabItem {
                     VStack {
-                        Image(systemName: "gear")
-                        Text("설정")
+                        Image(systemName: "flame.fill")
+                        Text("HOME")
                     }
                 }
         }
