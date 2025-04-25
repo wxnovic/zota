@@ -22,8 +22,13 @@ struct ContentView: View {
                 .tabItem {
                     VStack {
                         Image(systemName: "flame.fill")
-                        Text("Cat")
+                        Text("Create Task")
                     }
+                }
+            AdminView()
+                .tabItem {
+                    Image(systemName: "flame.fill")
+                    Text("Admin")
                 }
         }
         .accentColor(.orange) // 선택된 탭 색상

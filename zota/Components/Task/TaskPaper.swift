@@ -4,7 +4,6 @@ struct TaskPaper: View {
     var id: Int
     var text: String
 
-
     @State private var dragOffset: CGSize = .zero
     @State private var isDone: Bool = false
 
@@ -18,7 +17,6 @@ struct TaskPaper: View {
 
     var body: some View {
         ZStack {
-            // ✅ 체크 아이콘
             if showCheck {
                 Image(systemName: "checkmark.circle.fill")
                     .resizable()
@@ -30,7 +28,6 @@ struct TaskPaper: View {
                     .zIndex(3)
             }
 
-            // ✅ 숫자 등장
             if showCountText {
                 Text("5")
                     .font(.title)
@@ -86,11 +83,8 @@ struct TaskPaper: View {
                                             isDone = true
                                         }
 
-                                        // ✅ 햅틱 + 체크 등장
+                                        // ✅ 체크 등장
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                            let generator = UINotificationFeedbackGenerator()
-                                            generator.notificationOccurred(.success)
-
                                             withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                                                 showCheck = true
                                                 checkScale = 1.0
