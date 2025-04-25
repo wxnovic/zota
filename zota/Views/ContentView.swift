@@ -11,26 +11,18 @@ import CoreData
 struct ContentView: View {
     var body: some View {
         TabView {
-            MainView()
+            TaskMainView()
                 .tabItem {
                     VStack {
                         Image(systemName: "flame.fill")
                         Text("HOME")
                     }
                 }
-            
-            DataEntryView()
+            TaskCreateView()
                 .tabItem {
                     VStack {
                         Image(systemName: "flame.fill")
-                        Text("HOME")
-                    }
-                }
-            MasterListView()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "flame.fill")
-                        Text("HOME")
+                        Text("Cat")
                     }
                 }
         }
