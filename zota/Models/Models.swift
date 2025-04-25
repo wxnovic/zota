@@ -4,7 +4,6 @@
 //
 //  Created by emdas93 on 4/24/25.
 //
-
 import Foundation
 import SwiftData
 
@@ -16,16 +15,12 @@ final class UserModel {
     var createdAt: Date
     var updatedAt: Date
 
-    @Relationship(deleteRule: .cascade, inverse: \CategoryModel.user)
-    var categories: [CategoryModel]
-
     init(id: Int64 = Int64(Date().timeIntervalSince1970), name: String) {
         self.id = id
         self.name = name
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
-        self.categories = []
     }
 }
 
@@ -37,20 +32,12 @@ final class DayModel {
     var createdAt: Date
     var updatedAt: Date
 
-    @Relationship(deleteRule: .cascade, inverse: \TaskModel.day)
-    var tasks: [TaskModel]
-
-    @Relationship(deleteRule: .cascade, inverse: \BombModel.day)
-    var bombs: [BombModel]
-
     init(id: Int64 = Int64(Date().timeIntervalSince1970), date: Date) {
         self.id = id
         self.date = date
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
-        self.tasks = []
-        self.bombs = []
     }
 }
 
@@ -61,19 +48,15 @@ final class CategoryModel {
     var title: String
     var createdAt: Date
     var updatedAt: Date
+    var userId: Int64?
 
-    @Relationship var user: UserModel
-    @Relationship(deleteRule: .cascade, inverse: \ItemModel.category)
-    var items: [ItemModel]
-
-    init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, user: UserModel) {
+    init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, userId: Int64? = nil) {
         self.id = id
         self.title = title
-        self.user = user
+        self.userId = userId
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
-        self.items = []
     }
 }
 
@@ -85,21 +68,17 @@ final class ItemModel {
     var color: String
     var createdAt: Date
     var updatedAt: Date
-
-    @Relationship var category: CategoryModel
-    @Relationship(deleteRule: .cascade, inverse: \TaskModel.item)
-    var tasks: [TaskModel]
+    var categoryId: Int64?
     var isDeleted: Bool = false
 
-    init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, color: String, category: CategoryModel) {
+    init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, color: String, categoryId: Int64? = nil) {
         self.id = id
         self.title = title
         self.color = color
-        self.category = category
+        self.categoryId = categoryId
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
-        self.tasks = []
     }
 }
 
@@ -113,18 +92,17 @@ final class TaskModel {
     var password: Int
     var createdAt: Date
     var updatedAt: Date
+    var itemId: Int64?
+    var dayId: Int64?
 
-    @Relationship var item: ItemModel
-    @Relationship var day: DayModel
-
-    init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, color: String, isDone: Bool = false, password: Int, item: ItemModel, day: DayModel) {
+    init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, color: String, isDone: Bool = false, password: Int, itemId: Int64? = nil, dayId: Int64? = nil) {
         self.id = id
         self.title = title
         self.color = color
         self.isDone = isDone
         self.password = password
-        self.item = item
-        self.day = day
+        self.itemId = itemId
+        self.dayId = dayId
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
@@ -139,14 +117,13 @@ final class BombModel {
     var state: Int
     var createdAt: Date
     var updatedAt: Date
+    var dayId: Int64?
 
-    @Relationship var day: DayModel
-
-    init(id: Int64 = Int64(Date().timeIntervalSince1970), password: String, state: Int = 0, day: DayModel) {
+    init(id: Int64 = Int64(Date().timeIntervalSince1970), password: String, state: Int = 0, dayId: Int64? = nil) {
         self.id = id
         self.password = password
         self.state = state
-        self.day = day
+        self.dayId = dayId
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
