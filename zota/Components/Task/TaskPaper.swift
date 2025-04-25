@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct TaskPaper: View {
     var id: Int
@@ -145,4 +144,8 @@ struct TaskPaper: View {
         }
         .frame(width: 120, height: 140)
     }
+}
+
+#Preview {
+    TaskPaper(id: 1, text: "TET")
 }
