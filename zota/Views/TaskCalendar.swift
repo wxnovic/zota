@@ -35,6 +35,7 @@ struct DayTaskBox: View {
 // 🌈 메인 배경 뷰
 struct TaskCalendar: View {
     let days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    
 
     var body: some View {
         ZStack {

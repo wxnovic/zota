@@ -89,6 +89,7 @@ final class ItemModel {
     @Relationship var category: CategoryModel
     @Relationship(deleteRule: .cascade, inverse: \TaskModel.item)
     var tasks: [TaskModel]
+    var isDeleted: Bool = false
 
     init(id: Int64 = Int64(Date().timeIntervalSince1970), title: String, color: String, category: CategoryModel) {
         self.id = id
