@@ -68,7 +68,6 @@ struct TaskModifyPopup: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
     }
 }
 
