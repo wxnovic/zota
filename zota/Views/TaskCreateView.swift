@@ -1,22 +1,70 @@
-//
-//  Untitled.swift
-//  zota
-//
-//  Created by Aaron on 4/25/25.
-//
-
-
 import SwiftUI
+import SwiftData
+
+class TaskData: ObservableObject, CustomStringConvertible {
+    var description: String = ""
+    
+    @Published var title: String = ""
+    @Published var categoryId: Int64 = 0
+    @Published var date: String = ""
+}
+
+class TaskCreateModel: ObservableObject {
+    
+    
+    // View 관련 상태
+    @Published var step: Int = 1
+    
+    // 유저가 선택한 카테고리
+    var selectedCategoryId: Int64?
+    
+    // Days가 가질 taskData
+    @Published var taskDatas: [TaskData] = []
+    
+    
+    // 유저가 선택한 일수
+    @Published var selectedDay: Int?
+    
+    
+    var today: Date = Date()
+    var dates: [String] {
+        let calendar = Calendar.current
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd"
+        
+        return (0..<7).compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: today) else {
+                return nil
+            }
+            return formatter.string(from: date)
+        }
+    }
+    
+    var weekdays: [String] {
+        let calendar = Calendar.current
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX") // 월요일(Mon), 화요일(Tue) 영문으로
+        formatter.dateFormat = "EEE" // 요일만 짧게 (Mon, Tue 등)
+        
+        return (0..<7).compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: today) else {
+                return nil
+            }
+            return formatter.string(from: date)
+        }
+    }
+    
+    
+}
+
 
 struct TaskCreateView: View {
-    @State private var taskTitles = ["레포트", "시험", "발표", "과제"]
-    @State private var showInputPopup = false
-    @State private var newTaskText = ""
-    @State private var isEditMode = false
-    @State private var selectedTask: String? = nil // ✅ 현재 선택된 버튼
-
+    
+    
+    @StateObject private var taskCreateModel: TaskCreateModel = TaskCreateModel()
+    
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-
+    
     var body: some View {
         ZStack {
             Image("wallpaper")
@@ -24,67 +72,83 @@ struct TaskCreateView: View {
                 .scaledToFill()
                 .ignoresSafeArea()
                 .onTapGesture {
-                    if isEditMode {
-                        withAnimation { isEditMode = false }
-                    } else {
-                        selectedTask = nil // ✅ 선택 상태 초기화
-                    }
+                    print()
                 }
-
+                .zIndex(-1)
             
-            if showInputPopup {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-                    .zIndex(1)
-
-                VStack(spacing: 20) {
-                    Text("새로운 항목 추가")
-                        .font(.headline)
-                        .padding(.top)
-
-                    TextField("예: 과제, 일정 등", text: $newTaskText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-                        
-
-                    HStack(spacing: 20) {
-                        Button("확인") {
-                            let trimmed = newTaskText.trimmingCharacters(in: .whitespaces)
-                            if !trimmed.isEmpty {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    taskTitles.append(trimmed)
-                                    newTaskText = ""
-                                    showInputPopup = false
-                                }
-                            }
+            if taskCreateModel.step == 1 {
+                TaskStep1(taskCreateModel: taskCreateModel)
+                    .transition(.move(edge: .leading)) // 👉 이동 효과 추가
+            }
+            else if taskCreateModel.step == 2 {
+                TaskStep2(taskCreateModel: taskCreateModel)
+                    .transition(.move(edge: .leading))
+            }
+            else if taskCreateModel.step == 3 {
+                TaskStep3(taskCreateModel: taskCreateModel)
+                    .transition(.move(edge: .leading))
+            }
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            taskCreateModel.step = max(taskCreateModel.step - 1, 1)
                         }
-                        .frame(width: 100, height: 36)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-
-                        Button("취소") {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showInputPopup = false
-                            }
-                        }
-                        .frame(width: 100, height: 36)
-                        .background(Color.gray.opacity(0.3))
-                        .foregroundColor(.black)
-                        .cornerRadius(8)
+                        print(taskCreateModel.step)
+                    }) {
+                        Text("이전")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                            .frame(width: 80, height: 50)
+                            .background(Color.white.opacity(0.5))
+                            .cornerRadius(20)
+                            .foregroundStyle(.black)
                     }
-                    .padding(.bottom)
+                    Spacer()
+                    Button(action: {
+                        withAnimation {
+                            
+                            // 첫번째 화면에서 넘어갈때 validation
+                            if(taskCreateModel.step == 1 && (taskCreateModel.selectedCategoryId) != nil){
+                                taskCreateModel.step = min(taskCreateModel.step + 1, 3)
+                            }
+                            
+                            // 두번째 화면에서 넘어갈때 validation
+                            else if(taskCreateModel.step == 2 && (taskCreateModel.selectedDay != nil)){
+                                taskCreateModel.step = min(taskCreateModel.step + 1, 3)
+                                if let selectedDay = taskCreateModel.selectedDay {
+                                        taskCreateModel.taskDatas.removeAll()
+                                        for _ in 0..<selectedDay {
+                                            taskCreateModel.taskDatas.append(TaskData())
+                                        }
+                                    }
+                            }
+                            
+                            // 세번째 화면 완료 작업 작성
+                            else if(taskCreateModel.step == 3){
+                                // 완료 작업 작성
+                                print(taskCreateModel)
+                                
+
+                            }
+                            
+                        }
+                        print(taskCreateModel.step)
+                    }) {
+                        Text(taskCreateModel.step == 3 ? "완료" : "다음")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                            .frame(width: 80, height: 50)
+                            .background(Color.white.opacity(0.5))
+                            .cornerRadius(20)
+                            .foregroundStyle(.black)
+                    }
                 }
-                .frame(width: 300)
-                .background(Color.white)
-                .cornerRadius(20)
-                .shadow(radius: 20)
-                .transition(.opacity)
-                .zIndex(2)
+                .padding(.horizontal, 40)
+                .padding(.bottom, 80)
             }
         }
-        .animation(.easeInOut(duration: 0.3), value: showInputPopup)
     }
 }
 

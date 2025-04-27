@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct TaskPaper: View {
-    var id: Int
-    var text: String
+
+    var onDone: (() -> Void)?
+    
+    @Bindable var task:TaskModel
+
 
     @State private var dragOffset: CGSize = .zero
-    @State private var isDone: Bool = false
 
     @State private var showCheck = false
     @State private var checkScale: CGFloat = 0.6
@@ -28,18 +30,17 @@ struct TaskPaper: View {
                     .zIndex(3)
             }
 
-            if showCountText {
-                Text("5")
+            if task.isDone {
+                Text(task.password.description)
                     .font(.title)
                     .foregroundColor(.orange)
                     .bold()
-                    .offset(y: countOffset)
-                    .opacity(countOpacity)
+                    
                     .transition(.move(edge: .top).combined(with: .opacity))
-                    .zIndex(4)
+                    .zIndex(2)
             }
 
-            if !isDone {
+            if !task.isDone {
                 ZStack {
                     Rectangle()
                         .frame(width: 120, height: 140)
@@ -60,16 +61,16 @@ struct TaskPaper: View {
                         .resizable()
                         .frame(width: 100, height: 100)
                         .offset(
-                            x: isDone ? -30 : 0,
-                            y: isDone ? 60 : 15
+                            x: task.isDone ? -30 : 0,
+                            y: task.isDone ? 60 : 15
                         )
                         .rotationEffect(
-                            isDone
+                            task.isDone
                             ? Angle(degrees: -30)
                             : Angle(degrees: Double(dragOffset.height) / 5),
                             anchor: .topLeading
                         )
-                        .opacity(isDone ? 0 : 1)
+                        .opacity(task.isDone ? 0 : 1)
                         .gesture(
                             DragGesture()
                                 .onChanged { value in
@@ -80,8 +81,10 @@ struct TaskPaper: View {
                                 .onEnded { value in
                                     if value.translation.width < 0 && abs(value.translation.height) > 80 {
                                         withAnimation(.easeInOut(duration: 0.3)) {
-                                            isDone = true
+                                            task.isDone = true
                                         }
+                                        
+                                        onDone?()
 
                                         // ✅ 체크 등장
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
@@ -115,31 +118,27 @@ struct TaskPaper: View {
                         )
                         .zIndex(1)
 
-                    Text(text)
+                    Text(task.title.description)
                         .frame(width: 80, height: 120)
                         .foregroundColor(.black)
                         .font(.title3)
                         .offset(
-                            x: isDone ? -20 : 0,
-                            y: isDone ? 55 : 10
+                            x: task.isDone ? -20 : 0,
+                            y: task.isDone ? 55 : 10
                         )
                         .rotationEffect(
-                            isDone
+                            task.isDone
                             ? Angle(degrees: -30)
                             : Angle(degrees: Double(dragOffset.height) / 5),
                             anchor: .topLeading
                         )
-                        .opacity(isDone ? 0 : 1)
+                        .opacity(task.isDone ? 0 : 1)
                         .zIndex(2)
                 }
                 .animation(.spring(), value: dragOffset)
-                .animation(.easeInOut(duration: 0.3), value: isDone)
+                .animation(.easeInOut(duration: 0.3), value: task.isDone)
             }
         }
         .frame(width: 120, height: 140)
     }
-}
-
-#Preview {
-    TaskPaper(id: 1, text: "TET")
 }
