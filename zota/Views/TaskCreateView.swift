@@ -1,12 +1,24 @@
 import SwiftUI
 import SwiftData
 
-class TaskData: ObservableObject, CustomStringConvertible {
-    var description: String = ""
+class TaskData: ObservableObject, Identifiable {
+    
     
     @Published var title: String = ""
     @Published var categoryId: Int64 = 0
     @Published var date: String = ""
+    
+    let id = UUID() // ⭐️ 각 TaskData에 고유 ID 부여
+    
+    init(title: String, categoryId: Int64, date: String) {
+        self.title = title
+        self.categoryId = categoryId
+        self.date = date
+    }
+}
+
+class DayData: ObservableObject {
+    @Published var taskList: [TaskData] = []
 }
 
 class TaskCreateModel: ObservableObject {
@@ -18,7 +30,9 @@ class TaskCreateModel: ObservableObject {
     // 유저가 선택한 카테고리
     var selectedCategoryId: Int64?
     
+    
     // Days가 가질 taskData
+    @Published var dayList: [DayData] = []
     @Published var taskDatas: [TaskData] = []
     
     
@@ -59,7 +73,8 @@ class TaskCreateModel: ObservableObject {
 
 
 struct TaskCreateView: View {
-    
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     
     @StateObject private var taskCreateModel: TaskCreateModel = TaskCreateModel()
     
@@ -119,9 +134,9 @@ struct TaskCreateView: View {
                             else if(taskCreateModel.step == 2 && (taskCreateModel.selectedDay != nil)){
                                 taskCreateModel.step = min(taskCreateModel.step + 1, 3)
                                 if let selectedDay = taskCreateModel.selectedDay {
-                                        taskCreateModel.taskDatas.removeAll()
+                                        taskCreateModel.dayList.removeAll()
                                         for _ in 0..<selectedDay {
-                                            taskCreateModel.taskDatas.append(TaskData())
+                                            taskCreateModel.dayList.append(DayData())
                                         }
                                     }
                             }
@@ -129,8 +144,28 @@ struct TaskCreateView: View {
                             // 세번째 화면 완료 작업 작성
                             else if(taskCreateModel.step == 3){
                                 // 완료 작업 작성
-                                print(taskCreateModel)
+                                for (index, dayData) in taskCreateModel.dayList.enumerated() {
+                                    // 1. DayModel 생성
+                                    let dayModel = DayModel(date: Calendar.current.date(byAdding: .day, value: index, to: taskCreateModel.today) ?? Date())
+                                    modelContext.insert(dayModel)
+                                    
+                                    // 2. TaskModel 생성
+                                    for taskData in dayData.taskList {
+                                        let taskModel = TaskModel(
+                                            title: taskData.title,
+                                            color: "default", // 네 정책에 맞게
+                                            isDone: false,
+                                            password: Int.random(in: 1000...9999),
+                                            itemId: nil,
+                                            dayId: dayModel.id // 여기! DayModel 연결
+                                        )
+                                        modelContext.insert(taskModel)
+                                    }
+                                }
                                 
+                                // 3. 최종 저장
+                                try? modelContext.save()
+                                dismiss()
 
                             }
                             

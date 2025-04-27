@@ -9,8 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct TaskStep3: View {
-    var taskCreateModel: TaskCreateModel
+    @ObservedObject var taskCreateModel: TaskCreateModel
     @Query private var items: [ItemModel]
+    @State private var refreshID = UUID()
     
     @State var selectedTask: Int64 = 0
     
@@ -22,41 +23,49 @@ struct TaskStep3: View {
                 ForEach(0..<4, id: \.self) {index in
                     if(index < taskCreateModel.selectedDay ?? 4){
                         Button(action: {
-                            if((selectedTask) != 0){
-                                taskCreateModel.taskDatas[index].title = items.first(where: {$0.id == selectedTask})?.title ?? "not found"
-                                taskCreateModel.taskDatas[index].date = taskCreateModel.dates[index]
-                                taskCreateModel.taskDatas[index].categoryId = taskCreateModel.selectedCategoryId ?? 1
-                                print(taskCreateModel.taskDatas[index].title)
-                                print(taskCreateModel.taskDatas[index].date)
-                                print(taskCreateModel.taskDatas[index].categoryId)
+                            if selectedTask != 0 {
+                                let titleData: String = items.first(where: { $0.id == selectedTask })?.title ?? "not found"
+                                let dateData: String = taskCreateModel.dates[index]
+                                let categoryIdData: Int64 = taskCreateModel.selectedCategoryId ?? 1
+
+                                let taskData = TaskData(
+                                    title: titleData,
+                                    categoryId: categoryIdData,
+                                    date: dateData
+                                )
+
+                                taskCreateModel.dayList[index].taskList.append(taskData) // 여기!!
+                                refreshID = UUID()
                             }
                         }) {
-                            VStack{
-                                Text(taskCreateModel.weekdays[index])
-                                    .font(.system(size: 20, weight: .bold, design: .default))
-                                    .foregroundColor({
-                                        switch taskCreateModel.weekdays[index] {
-                                        case "Sun":
-                                            return .red
-                                        case "Sat":
-                                            return .blue
-                                        default:
-                                            return .black
-                                        }
-                                    }())
-                                ForEach(taskCreateModel.taskDatas, id:\.title ){task in
-                                    Text("TEST")
-                                }
-                            }
+                             VStack {
+                                 Text(taskCreateModel.weekdays[index])
+                                     .font(.system(size: 20, weight: .bold, design: .default))
+                                     .foregroundColor({
+                                         switch taskCreateModel.weekdays[index] {
+                                         case "Sun":
+                                             return .red
+                                         case "Sat":
+                                             return .blue
+                                         default:
+                                             return .black
+                                         }
+                                     }())
+                                 
+                                 ForEach(taskCreateModel.dayList[index].taskList) { taskData in
+                                     VStack{
+                                         Text(taskData.title)
+                                             .font(.system(size: 10))
+                                     }
+                                     .frame(width: 80, height: 20)
+                                     .background(Color.blue.opacity(0.5))
+                                     
+                                 }.id(refreshID)
+                             }
+
                             .frame(width: 80, height: 150, alignment: .top)
                             .background(Color(hex: "E9EAF0"))
                             .cornerRadius(20)
-                            
-                            
-                            
-                            
-                            
-                
                         }
                     }
                 }
@@ -125,24 +134,43 @@ struct TaskStep3: View {
                 ForEach(4..<7, id: \.self) {index in
                     if(index < taskCreateModel.selectedDay ?? 7){
                         Button(action: {
-                            
+                            if selectedTask != 0 {
+                                let titleData: String = items.first(where: { $0.id == selectedTask })?.title ?? "not found"
+                                let dateData: String = taskCreateModel.dates[index]
+                                let categoryIdData: Int64 = taskCreateModel.selectedCategoryId ?? 1
+
+                                let taskData = TaskData(
+                                    title: titleData,
+                                    categoryId: categoryIdData,
+                                    date: dateData
+                                )
+
+                                taskCreateModel.dayList[index].taskList.append(taskData) // 여기!!
+                                refreshID = UUID()
+                            }
                         }) {
-                            Text(taskCreateModel.weekdays[index])
-                                .font(.system(size: 20, weight: .bold, design: .default))
-                                .frame(width: 80, height: 150, alignment: .top)
-                                .background(Color(hex: "E9EAF0"))
-                                .cornerRadius(20)
-                                .foregroundColor({
-                                    switch taskCreateModel.weekdays[index] {
-                                    case "Sun":
-                                        return .red
-                                    case "Sat":
-                                        return .blue
-                                    default:
-                                        return .black
-                                    }
-                                }())
-                            
+                             VStack {
+                                 Text(taskCreateModel.weekdays[index])
+                                     .font(.system(size: 20, weight: .bold, design: .default))
+                                     .foregroundColor({
+                                         switch taskCreateModel.weekdays[index] {
+                                         case "Sun":
+                                             return .red
+                                         case "Sat":
+                                             return .blue
+                                         default:
+                                             return .black
+                                         }
+                                     }())
+                                 
+                                 ForEach(taskCreateModel.dayList[index].taskList) { taskData in
+                                     Text(taskData.title)
+                                 }.id(refreshID)
+                             }
+
+                            .frame(width: 80, height: 150, alignment: .top)
+                            .background(Color(hex: "E9EAF0"))
+                            .cornerRadius(20)
                         }
                     }
                 }
