@@ -145,6 +145,7 @@ struct TaskCreateView: View {
                             else if(taskCreateModel.step == 3){
                                 // 완료 작업 작성
                                 for (index, dayData) in taskCreateModel.dayList.enumerated() {
+                                    
                                     // 1. DayModel 생성
                                     let dayModel = DayModel(date: Calendar.current.date(byAdding: .day, value: index, to: taskCreateModel.today) ?? Date())
                                     modelContext.insert(dayModel)
